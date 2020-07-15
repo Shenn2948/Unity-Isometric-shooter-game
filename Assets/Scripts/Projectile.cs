@@ -20,7 +20,7 @@ public class Projectile : MonoBehaviour
 
         if (initialCollisions.Length > 0)
         {
-            OnHitObject(initialCollisions[0]);
+            OnHitObject(initialCollisions[0], transform.position);
         }
     }
 
@@ -42,22 +42,14 @@ public class Projectile : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, moveDistance + skinWidth, collisionMask, QueryTriggerInteraction.Collide))
         {
-            OnHitObject(hit);
+            OnHitObject(hit.collider, hit.point);
         }
     }
 
-    private void OnHitObject(RaycastHit hit)
-    {
-        IDamageable damageableObject = hit.collider.GetComponent<IDamageable>();
-        damageableObject?.TakeHit(damage, hit);
-
-        Destroy(gameObject);
-    }
-
-    private void OnHitObject(Collider c)
+    private void OnHitObject(Collider c, Vector3 hitPoint)
     {
         IDamageable damageableObject = c.GetComponent<IDamageable>();
-        damageableObject?.TakeDamage(damage);
+        damageableObject?.TakeHit(damage, hitPoint, transform.forward);
 
         Destroy(gameObject);
     }

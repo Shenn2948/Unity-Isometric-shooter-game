@@ -32,6 +32,8 @@ public class Enemy : LivingEntity
 
     private bool _hasTarget;
 
+    public ParticleSystem DeathEffect;
+
     protected override void Start()
     {
         base.Start();
@@ -71,6 +73,16 @@ public class Enemy : LivingEntity
                 }
             }
         }
+    }
+
+    public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
+    {
+        if (damage >= _health)
+        {
+            Destroy(Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)), DeathEffect.main.startLifetime.constant);
+        }
+
+        base.TakeHit(damage, hitPoint, hitDirection);
     }
 
     private IEnumerator Attack()
