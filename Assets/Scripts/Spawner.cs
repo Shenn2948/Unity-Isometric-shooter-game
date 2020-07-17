@@ -23,6 +23,8 @@ public class Spawner : MonoBehaviour
 
     public event Action<int> OnNewWave;
 
+    public bool DeveloperMode;
+
     public Wave[] Waves;
     public Enemy Enemy;
 
@@ -51,12 +53,26 @@ public class Spawner : MonoBehaviour
                 campPositionOld = playerT.position;
             }
 
-            if (_enemiesRemainingToSpawn > 0 && Time.time > _nextSpawnTime)
+            if ((_enemiesRemainingToSpawn > 0 || _currentWave.Infinite) && Time.time > _nextSpawnTime)
             {
                 _enemiesRemainingToSpawn--;
                 _nextSpawnTime = Time.time + _currentWave.TimeBetweenSpawn;
 
-                StartCoroutine(SpawnEnemy());
+                StartCoroutine("SpawnEnemy");
+            }
+        }
+
+        if (DeveloperMode)
+        {
+            if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                StopCoroutine("SpawnEnemy");
+                foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+                {
+                    Destroy(enemy.gameObject);
+                }
+
+                NextWave();
             }
         }
     }
@@ -87,6 +103,8 @@ public class Spawner : MonoBehaviour
 
         Enemy spawnedEnemy = Instantiate(Enemy, spawnTile.position + Vector3.up, Quaternion.identity);
         spawnedEnemy.OnDeath += OnEnemyDeath;
+
+        spawnedEnemy.SetCharacteristics(_currentWave);
     }
 
     private void OnEnemyDeath()
@@ -129,7 +147,13 @@ public class Spawner : MonoBehaviour
     [Serializable]
     public class Wave
     {
+        public bool Infinite;
         public int EnemyCount;
         public float TimeBetweenSpawn;
+
+        public float MoveSpeed;
+        public int HitsToKillPlayer;
+        public float EnemyHealth;
+        public Color SkinColor;
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class Player : LivingEntity
 {
     public float MoveSpeed = 5f;
+    public Crosshairs Crosshairs;
     private PlayerController _controller;
     private GunController _gunController;
     private Camera _viewCamera;
@@ -21,29 +22,38 @@ public class Player : LivingEntity
 
     void Update()
     {
-        // Movement input
         MovementInput();
-
-        // Look input
         LookInput();
 
         // Weapon input
         if (Input.GetMouseButton(0))
         {
-            _gunController.Shoot();
+            _gunController.OnTriggerHold();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            _gunController.OnTriggerRelease();
         }
     }
 
     private void LookInput()
     {
         Ray ray = _viewCamera.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane groundPlane = new Plane(Vector3.up, Vector3.up * _gunController.GunHeight);
 
         if (groundPlane.Raycast(ray, out float rayDistance))
         {
             Vector3 point = ray.GetPoint(rayDistance);
             //Debug.DrawLine(ray.origin, point, Color.red);
             _controller.LookAt(point);
+            Crosshairs.transform.position = point;
+            Crosshairs.DetectTargets(ray);
+
+            if ((new Vector2(point.x, point.z) - new Vector2(transform.position.x, transform.position.z)).sqrMagnitude > 1)
+            {
+                _gunController.Aim(point);
+            }
         }
     }
 

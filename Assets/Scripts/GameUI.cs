@@ -21,6 +21,8 @@ public class GameUI : MonoBehaviour
 
     private void OnGameOver()
     {
+        Cursor.visible = true;
+
         StartCoroutine(Fade(Color.clear, Color.black, 1));
         GameOverUi.SetActive(true);
     }

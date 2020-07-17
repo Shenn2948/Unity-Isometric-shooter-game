@@ -10,6 +10,7 @@ public class MapGenerator : MonoBehaviour
     public Transform TilePrefab;
     public Transform ObstaclePrefab;
     public Transform NavMeshFloor;
+    public Transform MapFloor;
     public Transform NavMeshMaskPrefab;
     public Vector2 MaxMapSize;
 
@@ -37,7 +38,6 @@ public class MapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         _currentMap = Maps[MapIndex];
-        GetComponent<BoxCollider>().size = new Vector3(_currentMap.MapSize.X * TileSize, .5f, _currentMap.MapSize.Y * TileSize);
 
         _tileMap = new Transform[_currentMap.MapSize.X, _currentMap.MapSize.Y];
 
@@ -49,6 +49,8 @@ public class MapGenerator : MonoBehaviour
         InstantiateObstacles(mapHolder);
 
         CreateNavMeshMask(mapHolder);
+
+        MapFloor.localScale = new Vector3(_currentMap.MapSize.X * TileSize, _currentMap.MapSize.Y * TileSize);
     }
 
     private void OnNewWave(int waveNumber)
