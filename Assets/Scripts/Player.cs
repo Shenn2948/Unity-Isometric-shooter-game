@@ -12,12 +12,12 @@ public class Player : LivingEntity
     private GunController _gunController;
     private Camera _viewCamera;
 
-    protected override void Start()
+    void Awake()
     {
-        base.Start();
         _controller = GetComponent<PlayerController>();
         _gunController = GetComponent<GunController>();
         _viewCamera = Camera.main;
+        FindObjectOfType<Spawner>().OnNewWave += OnNewWave;
     }
 
     void Update()
@@ -35,6 +35,28 @@ public class Player : LivingEntity
         {
             _gunController.OnTriggerRelease();
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _gunController.Reload();
+        }
+
+        if (transform.position.y < -10)
+        {
+            TakeDamage(_health);
+        }
+    }
+
+    public override void Die()
+    {
+        AudioManager.instance.PlaySound("Player death", transform.position);
+        base.Die();
+    }
+
+    void OnNewWave(int waveNumber)
+    {
+        _health = StartingHealth;
+        _gunController.EquipGun(waveNumber - 1);
     }
 
     private void LookInput()

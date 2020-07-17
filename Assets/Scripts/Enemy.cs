@@ -33,10 +33,12 @@ public class Enemy : LivingEntity
     private bool _hasTarget;
 
     public ParticleSystem DeathEffect;
+    private Renderer _deathEffRenderer;
 
     void Awake()
     {
         _pathFinder = GetComponent<NavMeshAgent>();
+        _deathEffRenderer = DeathEffect.GetComponent<Renderer>();
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -76,6 +78,7 @@ public class Enemy : LivingEntity
                 if (sqrDistanceToTarget < Mathf.Pow(_attackDistanceThreshold + _myCollisionRadius + _targetCollisionRadius, 2))
                 {
                     _nextAttackTime = Time.time + _timeBetweenAttacks;
+                    AudioManager.instance.PlaySound("Enemy Attack", transform.position);
                     StartCoroutine(Attack());
                 }
             }
@@ -84,8 +87,11 @@ public class Enemy : LivingEntity
 
     public override void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
     {
+        AudioManager.instance.PlaySound("Impact", transform.position);
+
         if (damage >= _health)
         {
+            AudioManager.instance.PlaySound("Enemy Death", transform.position);
             Destroy(Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)), DeathEffect.main.startLifetime.constant);
         }
 
@@ -164,6 +170,15 @@ public class Enemy : LivingEntity
         }
 
         StartingHealth = currentWave.EnemyHealth;
+
+        ParticleSystem.MainModule deathEffectMain = DeathEffect.main;
+        deathEffectMain.startColor = new ParticleSystem.MinMaxGradient { color = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1) };
+        //DeathEffect.startColor = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1);
+
+        //if (_deathEffRenderer != null)
+        //{
+        //    _deathEffRenderer.sharedMaterial.color = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1);
+        //}
 
         _skinMaterial = GetComponent<Renderer>().material;
         _skinMaterial.color = currentWave.SkinColor;

@@ -7,16 +7,12 @@ public class GunController : MonoBehaviour
 {
     private Gun _equippedGun;
 
-    public Gun StartingGun;
+    public Gun[] Guns;
     public Transform WeaponHold;
 
 
     void Start()
     {
-        if (StartingGun != null)
-        {
-            EquipGun(StartingGun);
-        }
     }
 
     public void EquipGun(Gun gunToEquip)
@@ -54,6 +50,19 @@ public class GunController : MonoBehaviour
         }
     }
 
+    public void Reload()
+    {
+        if (_equippedGun != null)
+        {
+            _equippedGun.Reload();
+        }
+    }
+
     public float GunHeight =>
         WeaponHold.position.y;
+
+    public void EquipGun(int weaponIndex)
+    {
+        EquipGun(Guns[Mathf.Clamp(weaponIndex, 0, Guns.Length - 1)]);
+    }
 }

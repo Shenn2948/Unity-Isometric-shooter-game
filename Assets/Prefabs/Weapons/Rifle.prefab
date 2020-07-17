@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 3988283995120987435}
   - component: {fileID: 8298248935613384463}
   m_Layer: 0
-  m_Name: Gun
+  m_Name: Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -202,9 +202,17 @@ MonoBehaviour:
   MsBetweenShots: 100
   MuzzleVelocity: 35
   BurstCount: 3
+  ProjectilesPerMag: 40
+  ReloadTime: 0.4
+  KickbackMinMax: {x: 0.05, y: 0.2}
+  RecoilAngleMinMax: {x: 3, y: 5}
+  RecoilMoveSettleTime: 0.1
+  RecoilRotationSettleTime: 0.1
   Shell: {fileID: 3488604714116304596, guid: 02475f8fec86aea4886e924a238c5d67, type: 3}
   ShellInjection: {fileID: 3373713617629838202}
   FireModeType: 0
+  ShootAudio: {fileID: 8300000, guid: a2db5ebb4d321984991ca28aa3a5a30c, type: 3}
+  ReloadAudio: {fileID: 8300000, guid: 9a844cd80c2c96149b38b9ea8bce390c, type: 3}
 --- !u!114 &8298248935613384463
 MonoBehaviour:
   m_ObjectHideFlags: 0

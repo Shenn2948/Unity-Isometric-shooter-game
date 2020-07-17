@@ -7,12 +7,12 @@ public class Crosshairs : MonoBehaviour
     public LayerMask TargetMask;
     public SpriteRenderer Dot;
     public Color DotHighlightColor;
-    private Color originalColor;
+    private Color _originalColor;
 
     void Start()
     {
         Cursor.visible = false;
-        originalColor = Dot.color;
+        _originalColor = Dot.color;
     }
 
     void Update()
@@ -28,7 +28,7 @@ public class Crosshairs : MonoBehaviour
         }
         else
         {
-            Dot.color = originalColor;
+            Dot.color = _originalColor;
         }
     }
 }
