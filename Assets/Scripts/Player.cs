@@ -43,7 +43,7 @@ public class Player : LivingEntity
 
         if (transform.position.y < -10)
         {
-            TakeDamage(_health);
+            TakeDamage(Health);
         }
     }
 
@@ -55,7 +55,7 @@ public class Player : LivingEntity
 
     void OnNewWave(int waveNumber)
     {
-        _health = StartingHealth;
+        Health = StartingHealth;
         _gunController.EquipGun(waveNumber - 1);
     }
 

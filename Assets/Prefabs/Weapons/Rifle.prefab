@@ -201,7 +201,7 @@ MonoBehaviour:
     type: 3}
   MsBetweenShots: 100
   MuzzleVelocity: 35
-  BurstCount: 3
+  BurstCount: 10
   ProjectilesPerMag: 40
   ReloadTime: 0.4
   KickbackMinMax: {x: 0.05, y: 0.2}

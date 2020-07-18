@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : LivingEntity
@@ -33,12 +34,12 @@ public class Enemy : LivingEntity
     private bool _hasTarget;
 
     public ParticleSystem DeathEffect;
-    private Renderer _deathEffRenderer;
+
+    public Image HealthBarImage;
 
     void Awake()
     {
         _pathFinder = GetComponent<NavMeshAgent>();
-        _deathEffRenderer = DeathEffect.GetComponent<Renderer>();
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -89,13 +90,15 @@ public class Enemy : LivingEntity
     {
         AudioManager.instance.PlaySound("Impact", transform.position);
 
-        if (damage >= _health)
+        if (damage >= Health)
         {
             AudioManager.instance.PlaySound("Enemy Death", transform.position);
             Destroy(Instantiate(DeathEffect.gameObject, hitPoint, Quaternion.FromToRotation(Vector3.forward, hitDirection)), DeathEffect.main.startLifetime.constant);
         }
 
         base.TakeHit(damage, hitPoint, hitDirection);
+
+        HealthBarImage.fillAmount = Health / StartingHealth;
     }
 
     private IEnumerator Attack()
@@ -144,7 +147,7 @@ public class Enemy : LivingEntity
                 Vector3 dirToTarget = (_target.position - transform.position).normalized;
                 Vector3 targetPos = _target.position - dirToTarget * (_myCollisionRadius + _targetCollisionRadius + _attackDistanceThreshold / 2);
 
-                if (!_dead)
+                if (!Dead)
                 {
                     _pathFinder.SetDestination(targetPos);
                 }
@@ -173,12 +176,6 @@ public class Enemy : LivingEntity
 
         ParticleSystem.MainModule deathEffectMain = DeathEffect.main;
         deathEffectMain.startColor = new ParticleSystem.MinMaxGradient { color = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1) };
-        //DeathEffect.startColor = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1);
-
-        //if (_deathEffRenderer != null)
-        //{
-        //    _deathEffRenderer.sharedMaterial.color = new Color(currentWave.SkinColor.r, currentWave.SkinColor.g, currentWave.SkinColor.b, 1);
-        //}
 
         _skinMaterial = GetComponent<Renderer>().material;
         _skinMaterial.color = currentWave.SkinColor;

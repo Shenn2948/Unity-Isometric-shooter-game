@@ -7,14 +7,14 @@ public class LivingEntity : MonoBehaviour, IDamageable
 {
     public float StartingHealth;
 
-    protected float _health;
-    protected bool _dead;
+    protected float Health;
+    protected bool Dead;
 
     public event Action OnDeath;
 
     protected virtual void Start()
     {
-        _health = StartingHealth;
+        Health = StartingHealth;
     }
 
     public virtual void TakeHit(float damage, Vector3 hitPoint, Vector3 hitDirection)
@@ -24,9 +24,9 @@ public class LivingEntity : MonoBehaviour, IDamageable
 
     public virtual void TakeDamage(float damage)
     {
-        _health -= damage;
+        Health -= damage;
 
-        if (_health <= 0 && !_dead)
+        if (Health <= 0 && !Dead)
         {
             Die();
         }
@@ -35,7 +35,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
     [ContextMenu("Self destruct")]
     public virtual void Die()
     {
-        _dead = true;
+        Dead = true;
         OnDeath?.Invoke();
         Destroy(gameObject);
     }
