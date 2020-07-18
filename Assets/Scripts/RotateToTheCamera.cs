@@ -12,7 +12,7 @@ public class RotateToTheCamera : MonoBehaviour
         _rotation = transform.rotation;
     }
 
-    void Update()
+    void LateUpdate()
     {
         transform.rotation = _rotation;
     }
