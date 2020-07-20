@@ -149,7 +149,7 @@ public class Enemy : LivingEntity
 
                 if (!Dead)
                 {
-                    _pathFinder.SetDestination(targetPos);
+                    _pathFinder?.SetDestination(targetPos);
                 }
             }
 
