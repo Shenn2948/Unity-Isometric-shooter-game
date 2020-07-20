@@ -47,6 +47,11 @@ public class Projectile : MonoBehaviour
         {
             OnHitObject(hit.collider, hit.point);
         }
+
+        if (Physics.Raycast(ray, moveDistance, 1 << LayerMask.NameToLayer("Obstacle"), QueryTriggerInteraction.Collide))
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnHitObject(Collider c, Vector3 hitPoint)

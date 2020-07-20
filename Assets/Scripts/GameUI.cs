@@ -69,7 +69,6 @@ public class GameUI : MonoBehaviour
         }
     }
 
-
     private void OnGameOver()
     {
         Cursor.visible = true;
